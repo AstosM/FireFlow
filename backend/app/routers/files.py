@@ -253,7 +253,198 @@ async def upload_file(
             detail=str(e)
         )
 
+# =========================================================
+# TEXT SHARE
+# =========================================================
 
+@router.post("/upload-text")
+async def upload_text(
+    text: str = Form(...),
+    password: str | None = Form(None),
+    expiry_type: str = Form("24_hours"),
+    custom_days: int = Form(0),
+    custom_hours: int = Form(0),
+    custom_minutes: int = Form(0),
+    max_downloads: int = Form(3),
+    one_time: bool = Form(False),
+    db: Session = Depends(get_db)
+):
+
+    user_plan = "free"
+    limits = PLANS[user_plan]
+
+    try:
+
+        # -------------------------------------------------
+        # CHECK TEXT
+        # -------------------------------------------------
+
+        if not text.strip():
+            raise HTTPException(
+                status_code=400,
+                detail="Text cannot be empty."
+            )
+
+        # -------------------------------------------------
+        # TEXT SIZE CHECK
+        # -------------------------------------------------
+
+        content = text.encode("utf-8")
+
+        if len(content) > limits["max_file_size"]:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    f"Free plan allows maximum "
+                    f"{limits['max_file_size'] // (1024 * 1024)} MB."
+                )
+            )
+
+        # -------------------------------------------------
+        # CREATE TEXT FILE
+        # -------------------------------------------------
+
+        stored_filename = (
+            f"{uuid.uuid4()}.txt"
+        )
+
+        file_path = os.path.join(
+            UPLOAD_FOLDER,
+            stored_filename
+        )
+
+        with open(
+            file_path,
+            "wb"
+        ) as buffer:
+            buffer.write(content)
+
+        # -------------------------------------------------
+        # GENERATE FIREFLOW CODE
+        # -------------------------------------------------
+
+        share_code = generate_share_code()
+
+        # -------------------------------------------------
+        # DOWNLOAD URL
+        # -------------------------------------------------
+
+        download_url = (
+            f"{FRONTEND_URL}/receive?code={share_code}"
+        )
+
+        # -------------------------------------------------
+        # GENERATE QR
+        # -------------------------------------------------
+
+        qr_path = os.path.join(
+            QR_FOLDER,
+            f"{share_code}.png"
+        )
+
+        qr = qrcode.make(download_url)
+        qr.save(qr_path)
+
+        # -------------------------------------------------
+        # CALCULATE EXPIRY
+        # -------------------------------------------------
+
+        expires_at = calculate_expiry(
+            expiry_type,
+            custom_days,
+            custom_hours,
+            custom_minutes
+        )
+
+        # -------------------------------------------------
+        # EXPIRY LIMIT
+        # -------------------------------------------------
+
+        expiry_hours = (
+            expires_at - datetime.utcnow()
+        ).total_seconds() / 3600
+
+        if expiry_hours > limits["max_expiry_hours"]:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    f"Free plan allows maximum "
+                    f"{limits['max_expiry_hours']} hours expiry."
+                )
+            )
+
+        # -------------------------------------------------
+        # DOWNLOAD LIMIT
+        # -------------------------------------------------
+
+        if one_time:
+
+            max_downloads = 1
+
+        elif max_downloads > limits["max_downloads"]:
+
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    f"Free plan allows maximum "
+                    f"{limits['max_downloads']} downloads."
+                )
+            )
+
+        # -------------------------------------------------
+        # DATABASE RECORD
+        # -------------------------------------------------
+
+        db_file = FileModel(
+            original_filename="FireFlow-Text.txt",
+            stored_filename=stored_filename,
+            share_code=share_code,
+            mime_type="text/plain",
+            file_size=len(content),
+            password=password,
+            expires_at=expires_at,
+            max_downloads=max_downloads,
+            one_time=one_time
+        )
+
+        db.add(db_file)
+        db.commit()
+        db.refresh(db_file)
+
+        # -------------------------------------------------
+        # RESPONSE
+        # -------------------------------------------------
+
+        return {
+            "message": "Text shared successfully",
+            "plan": user_plan,
+            "share_code": share_code,
+            "download_url": download_url,
+            "qr_code": f"/qr/{share_code}.png",
+            "expiry": expires_at,
+            "limits": {
+                "max_file_size_mb":
+                    limits["max_file_size"] // (1024 * 1024),
+
+                "max_downloads":
+                    limits["max_downloads"],
+
+                "max_expiry_hours":
+                    limits["max_expiry_hours"]
+            }
+        }
+
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except Exception as e:
+        db.rollback()
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
 # =========================================================
 # CHECK SHARE CODE / NORMAL DOWNLOAD
 # =========================================================

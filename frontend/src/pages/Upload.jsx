@@ -1,8 +1,13 @@
+
 import { useState } from "react";
 import api from "../services/api";
 
 function Upload() {
+  const [mode, setMode] = useState("file");
+
   const [file, setFile] = useState(null);
+  const [text, setText] = useState("");
+
   const [password, setPassword] = useState("");
   const [expiryType, setExpiryType] = useState("24_hours");
   const [maxDownloads, setMaxDownloads] = useState(3);
@@ -12,6 +17,10 @@ function Upload() {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  // =========================================================
+  // SELECT FILE
+  // =========================================================
+
   function handleFile(e) {
     const selectedFile = e.target.files[0];
 
@@ -19,6 +28,10 @@ function Upload() {
       setFile(selectedFile);
     }
   }
+
+  // =========================================================
+  // DRAG AND DROP
+  // =========================================================
 
   function handleDrop(e) {
     e.preventDefault();
@@ -30,6 +43,10 @@ function Upload() {
     }
   }
 
+  // =========================================================
+  // GET COMPLETE DOWNLOAD LINK
+  // =========================================================
+
   function getFullLink() {
     const url = result?.download_url;
 
@@ -39,8 +56,12 @@ function Upload() {
 
     return url.startsWith("http")
       ? url
-      : `http://127.0.0.1:8000${url}`;
+      : `${import.meta.env.VITE_API_URL}${url}`;
   }
+
+  // =========================================================
+  // COPY DOWNLOAD LINK
+  // =========================================================
 
   async function copyLink() {
     const fullLink = getFullLink();
@@ -62,6 +83,10 @@ function Upload() {
     }
   }
 
+  // =========================================================
+  // WHATSAPP
+  // =========================================================
+
   function shareWhatsApp() {
     const fullLink = getFullLink();
 
@@ -70,14 +95,18 @@ function Upload() {
     }
 
     const message =
-      `🔥 FireFlow File Share\n\n` +
-      `Download the file here:\n${fullLink}`;
+      `🔥 FireFlow ${mode === "text" ? "Text" : "File"} Share\n\n` +
+      `Download it here:\n${fullLink}`;
 
     window.open(
       `https://wa.me/?text=${encodeURIComponent(message)}`,
       "_blank"
     );
   }
+
+  // =========================================================
+  // TELEGRAM
+  // =========================================================
 
   function shareTelegram() {
     const fullLink = getFullLink();
@@ -90,11 +119,15 @@ function Upload() {
       `https://t.me/share/url?url=${encodeURIComponent(
         fullLink
       )}&text=${encodeURIComponent(
-        "🔥 File shared through FireFlow"
+        `🔥 ${mode === "text" ? "Text" : "File"} shared through FireFlow`
       )}`,
       "_blank"
     );
   }
+
+  // =========================================================
+  // EMAIL
+  // =========================================================
 
   function shareEmail() {
     const fullLink = getFullLink();
@@ -103,11 +136,12 @@ function Upload() {
       return;
     }
 
-    const subject = "🔥 File shared through FireFlow";
+    const subject =
+      `🔥 ${mode === "text" ? "Text" : "File"} shared through FireFlow`;
 
     const body =
       `Hello,\n\n` +
-      `A file has been shared with you through FireFlow.\n\n` +
+      `A ${mode === "text" ? "text message" : "file"} has been shared with you through FireFlow.\n\n` +
       `Download it here:\n${fullLink}\n\n` +
       `🔥 FireFlow`;
 
@@ -116,6 +150,10 @@ function Upload() {
         subject
       )}&body=${encodeURIComponent(body)}`;
   }
+
+  // =========================================================
+  // UPLOAD FILE
+  // =========================================================
 
   async function uploadFile() {
     if (!file) {
@@ -140,92 +178,270 @@ function Upload() {
       );
 
       console.log(
-        "BACKEND RESPONSE:",
+        "FILE UPLOAD RESPONSE:",
         JSON.stringify(response.data, null, 2)
       );
 
       setResult(response.data);
+
     } catch (error) {
-      console.error("UPLOAD ERROR:", error);
+      console.error("FILE UPLOAD ERROR:", error);
 
       alert(
         error.response?.data?.detail ||
-          "Upload failed"
+        "File upload failed"
       );
+
     } finally {
       setLoading(false);
     }
   }
 
+  // =========================================================
+  // SHARE TEXT
+  // =========================================================
+
+  async function uploadText() {
+    if (!text.trim()) {
+      alert("Please write some text first.");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("text", text);
+    formData.append("password", password);
+    formData.append("expiry_type", expiryType);
+    formData.append("max_downloads", maxDownloads);
+    formData.append("one_time", oneTime);
+
+    try {
+      setLoading(true);
+
+      const response = await api.post(
+        "/files/upload-text",
+        formData
+      );
+
+      console.log(
+        "TEXT SHARE RESPONSE:",
+        JSON.stringify(response.data, null, 2)
+      );
+
+      setResult(response.data);
+
+    } catch (error) {
+      console.error("TEXT SHARE ERROR:", error);
+
+      alert(
+        error.response?.data?.detail ||
+        "Text sharing failed"
+      );
+
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // =========================================================
+  // RESET
+  // =========================================================
+
   function resetUpload() {
     setResult(null);
+
     setFile(null);
+    setText("");
+
     setPassword("");
     setExpiryType("24_hours");
     setMaxDownloads(3);
     setOneTime(false);
+
     setCopied(false);
   }
 
+  // =========================================================
+  // CHANGE MODE
+  // =========================================================
+
+  function changeMode(newMode) {
+    setMode(newMode);
+
+    setFile(null);
+    setText("");
+  }
+
+  // =========================================================
+  // UI
+  // =========================================================
+
   return (
-    <div className="upload-container">
+    <div>
 
       {/* HEADER */}
+
       <div className="upload-header">
-        <h1>📤 Upload File</h1>
+
+        <h1>
+          {mode === "file"
+            ? "📤 Upload File"
+            : "📝 Share Text"}
+        </h1>
 
         <p>
           Secure sharing with FireFlow protection.
         </p>
+
       </div>
+
+
+      {/* BEFORE UPLOAD */}
 
       {!result ? (
 
-        /* UPLOAD FORM */
-        <div
-          className="upload-box"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={handleDrop}
-        >
-          <div className="upload-icon">
-            ☁️
+        <div className="upload-box">
+
+          {/* MODE SWITCH */}
+
+          <div className="upload-mode-switch">
+
+            <button
+              type="button"
+              className={
+                mode === "file"
+                  ? "mode-btn active"
+                  : "mode-btn"
+              }
+              onClick={() => changeMode("file")}
+            >
+              📁 File
+            </button>
+
+            <button
+              type="button"
+              className={
+                mode === "text"
+                  ? "mode-btn active"
+                  : "mode-btn"
+              }
+              onClick={() => changeMode("text")}
+            >
+              📝 Text
+            </button>
+
           </div>
 
-          <h2>
-            Drag & Drop File
-          </h2>
 
-          <p className="upload-hint">
-            or choose a file from your computer
-          </p>
+          {/* =================================================
+              FILE MODE
+          ================================================= */}
 
-          {/* FILE INPUT */}
-          <input
-            type="file"
-            id="fileUpload"
-            onChange={handleFile}
-          />
+          {mode === "file" && (
 
-          <label
-            htmlFor="fileUpload"
-            className="choose-file-btn"
-          >
-            Choose File
-          </label>
+            <div
+              className="file-upload-area"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={handleDrop}
+            >
 
-          {/* SELECTED FILE */}
-          {file && (
-            <div className="file-info">
-              <span>Selected:</span>
+              <div className="upload-icon">
+                ☁️
+              </div>
 
-              <strong>
-                {file.name}
-              </strong>
+              <h2>
+                Drag & Drop File
+              </h2>
+
+              <p className="upload-hint">
+                or choose a file from your computer
+              </p>
+
+
+              {/* FILE INPUT */}
+
+              <input
+                type="file"
+                id="fileUpload"
+                onChange={handleFile}
+              />
+
+              <label
+                htmlFor="fileUpload"
+                className="choose-file-btn"
+              >
+                Choose File
+              </label>
+
+
+              {/* SELECTED FILE */}
+
+              {file && (
+
+                <div className="file-info">
+
+                  <span>
+                    Selected:
+                  </span>
+
+                  <strong>
+                    {file.name}
+                  </strong>
+
+                </div>
+
+              )}
+
             </div>
+
           )}
 
-          {/* OPTIONS */}
+
+          {/* =================================================
+              TEXT MODE
+          ================================================= */}
+
+          {mode === "text" && (
+
+            <div className="text-share-area">
+
+              <div className="text-share-icon">
+                📝
+              </div>
+
+              <h2>
+                Write or Paste Your Text
+              </h2>
+
+              <p className="upload-hint">
+                Share notes, messages, code, links or anything else.
+              </p>
+
+              <textarea
+                className="text-share-input"
+                placeholder="Type or paste your text here..."
+                value={text}
+                onChange={(e) =>
+                  setText(e.target.value)
+                }
+              />
+
+              <div className="text-character-count">
+                {text.length} characters
+              </div>
+
+            </div>
+
+          )}
+
+
+          {/* =================================================
+              OPTIONS
+          ================================================= */}
+
           <div className="upload-options">
+
+            {/* PASSWORD */}
 
             <input
               className="option-input"
@@ -237,6 +453,9 @@ function Upload() {
               }
             />
 
+
+            {/* EXPIRY */}
+
             <select
               className="option-input"
               value={expiryType}
@@ -244,6 +463,7 @@ function Upload() {
                 setExpiryType(e.target.value)
               }
             >
+
               <option value="15_minutes">
                 15 Minutes
               </option>
@@ -259,7 +479,11 @@ function Upload() {
               <option value="7_days">
                 7 Days
               </option>
+
             </select>
+
+
+            {/* MAX DOWNLOADS */}
 
             <input
               className="option-input"
@@ -272,7 +496,11 @@ function Upload() {
               }
             />
 
+
+            {/* ONE TIME */}
+
             <label className="checkbox">
+
               <input
                 type="checkbox"
                 checked={oneTime}
@@ -284,139 +512,207 @@ function Upload() {
               <span>
                 One Time Download
               </span>
+
             </label>
+
+
+            {/* ACTION BUTTON */}
 
             <button
               className="upload-btn"
-              onClick={uploadFile}
+              onClick={
+                mode === "file"
+                  ? uploadFile
+                  : uploadText
+              }
               disabled={loading}
             >
+
               {loading
-                ? "Uploading..."
-                : "Upload Now 🚀"}
+                ? mode === "file"
+                  ? "Uploading..."
+                  : "Sharing..."
+                : mode === "file"
+                  ? "Upload Now 🚀"
+                  : "Share Text 🚀"}
+
             </button>
 
           </div>
+
         </div>
 
       ) : (
 
-        /* SUCCESS */
+        /* =====================================================
+           SUCCESS
+        ===================================================== */
+
         <div className="result-card">
+
+          {/* SUCCESS ICON */}
 
           <div className="success-icon">
             ✓
           </div>
 
+
+          {/* TITLE */}
+
           <h2>
-            Upload Successful
+            {mode === "file"
+              ? "Upload Successful"
+              : "Text Shared Successfully"}
           </h2>
 
+
           <p className="result-subtitle">
-            Your file is ready to share.
+            {mode === "file"
+              ? "Your file is ready to share."
+              : "Your text is ready to share."}
           </p>
 
+
           {/* FIREFLOW CODE */}
+
           <div className="code-section">
 
-            <span>
-              FireFlow Code
+            <span className="code-label">
+              🔥 FireFlow Code
             </span>
 
             <div className="share-code">
-              {result?.share_code ||
-                "Unavailable"}
+              {result?.share_code || "Unavailable"}
             </div>
+
+            <p className="code-hint">
+              Share this code with the receiver
+            </p>
 
           </div>
 
+
           {/* QR CODE */}
+
           {result?.qr_code && (
+
             <div className="qr-section">
+
+              <h3 className="qr-title">
+                📱 Scan to Receive{" "}
+                {mode === "file" ? "File" : "Text"}
+              </h3>
+
+              <p className="qr-hint">
+                Scan this QR code with your phone camera
+              </p>
+
               <img
                 className="qr-image"
                 src={
                   result.qr_code.startsWith("http")
                     ? result.qr_code
-                    : `http://127.0.0.1:8000${result.qr_code}`
+                    : `${import.meta.env.VITE_API_URL}${result.qr_code}`
                 }
-                alt="FireFlow QR Code"
+                alt={
+                  mode === "file"
+                    ? "Scan QR code to receive file"
+                    : "Scan QR code to receive text"
+                }
               />
+
+              <p className="qr-footer">
+                🔗 Scan • Open • Download
+              </p>
+
             </div>
+
           )}
 
+
           {/* COPY LINK */}
+
           <button
-            type="button"
             className="copy-btn"
             onClick={copyLink}
             disabled={!result?.download_url}
           >
+
             {copied
               ? "Copied ✓"
               : "🔗 Copy Download Link"}
+
           </button>
 
+
           {/* SHARE */}
-          <div className="share-section">
 
-            <p className="share-title">
-              Share this file
-            </p>
-
-            <div className="share-buttons">
-
-              <button
-                type="button"
-                className="share-btn whatsapp-btn"
-                onClick={shareWhatsApp}
-              >
-                💬 WhatsApp
-              </button>
-
-              <button
-                type="button"
-                className="share-btn telegram-btn"
-                onClick={shareTelegram}
-              >
-                ✈️ Telegram
-              </button>
-
-              <button
-                type="button"
-                className="share-btn email-btn"
-                onClick={shareEmail}
-              >
-                📧 Email
-              </button>
-
-            </div>
+          <div className="share-title">
+            Share this {mode === "file" ? "file" : "text"}
           </div>
 
+
+          <div className="share-buttons">
+
+            <button
+              type="button"
+              className="share-btn whatsapp-btn"
+              onClick={shareWhatsApp}
+            >
+              💬 WhatsApp
+            </button>
+
+            <button
+              type="button"
+              className="share-btn telegram-btn"
+              onClick={shareTelegram}
+            >
+              ✈️ Telegram
+            </button>
+
+            <button
+              type="button"
+              className="share-btn email-btn"
+              onClick={shareEmail}
+            >
+              📧 Email
+            </button>
+
+          </div>
+
+
           {/* STATUS */}
+
           <div className="status-list">
 
             {oneTime && (
+
               <p className="success-msg">
                 ⚡ One Time Download Enabled
               </p>
+
             )}
 
             {password && (
+
               <p className="success-msg">
                 🔒 Password Protected
               </p>
+
             )}
 
           </div>
 
-          {/* NEW UPLOAD */}
+
+          {/* NEW SHARE */}
+
           <button
-            type="button"
             className="new-upload-btn"
             onClick={resetUpload}
           >
-            Upload Another File ➕
+            {mode === "file"
+              ? "Upload Another File ➕"
+              : "Share Another Text ➕"}
 
           </button>
 

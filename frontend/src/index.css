@@ -1345,3 +1345,800 @@ grid-template-columns: 1fr;
 width: 560px;
 }
 }
+/* =========================================================
+   UPLOAD SUCCESS CARD
+========================================================= */
+
+.result-card {
+  width: 100%;
+  max-width: 620px;
+  margin: 30px auto;
+  padding: 35px 30px;
+  text-align: center;
+  border-radius: 24px;
+
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.35);
+
+  backdrop-filter: blur(18px);
+}
+
+
+/* =========================================================
+   SUCCESS ICON
+========================================================= */
+
+.success-icon {
+  width: 58px;
+  height: 58px;
+
+  margin: 0 auto 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+  color: white;
+
+  font-size: 30px;
+  font-weight: 800;
+
+  box-shadow:
+    0 8px 25px rgba(34, 197, 94, 0.3);
+}
+
+
+/* =========================================================
+   SUCCESS TITLE
+========================================================= */
+
+.result-card h2 {
+  margin: 0;
+
+  font-size: 28px;
+  font-weight: 800;
+
+  letter-spacing: -0.5px;
+}
+
+
+.result-subtitle {
+  margin: 8px 0 25px;
+
+  font-size: 15px;
+
+  opacity: 0.65;
+}
+
+
+/* =========================================================
+   FIREFLOW CODE
+========================================================= */
+
+.code-section {
+  width: 100%;
+  max-width: 420px;
+
+  margin: 0 auto 28px;
+
+  padding: 20px;
+
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.055);
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+
+.code-label {
+  display: block;
+
+  font-size: 17px;
+  font-weight: 800;
+
+  letter-spacing: 0.4px;
+}
+
+
+.code-hint {
+  margin: 6px 0 14px;
+
+  font-size: 13px;
+
+  opacity: 0.6;
+}
+
+
+.share-code {
+  display: inline-block;
+
+  padding: 12px 24px;
+
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    #f97316,
+    #44ef97
+  );
+
+  color: white;
+
+  font-size: 24px;
+  font-weight: 900;
+
+  letter-spacing: 2px;
+
+  box-shadow:
+    0 8px 25px rgba(239, 68, 68, 0.25);
+}
+
+
+/* =========================================================
+   QR SECTION
+========================================================= */
+
+.qr-section {
+  margin: 28px auto 30px;
+
+  text-align: center;
+}
+
+
+.qr-title {
+  margin: 0 0 6px;
+
+  font-size: 19px;
+  font-weight: 800;
+}
+
+
+.qr-hint {
+  margin: 0 0 16px;
+
+  font-size: 13px;
+
+  opacity: 0.6;
+}
+
+
+.qr-image {
+  display: block;
+
+  width: 200px;
+  height: 200px;
+
+  margin: 0 auto;
+
+  padding: 10px;
+
+  background: white;
+
+  border-radius: 16px;
+
+  object-fit: contain;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+
+.qr-footer {
+  margin: 12px 0 0;
+
+  font-size: 12px;
+
+  opacity: 0.55;
+
+  letter-spacing: 0.3px;
+}
+
+
+/* =========================================================
+   COPY LINK BUTTON
+========================================================= */
+
+.copy-btn {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 13px 20px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.09);
+
+  color: inherit;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.copy-btn:hover {
+  transform: translateY(-2px);
+
+  background: rgba(255, 255, 255, 0.15);
+}
+
+
+.copy-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   SHARE TITLE
+========================================================= */
+
+.share-title {
+  margin: 25px 0 12px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  opacity: 0.7;
+}
+
+
+/* =========================================================
+   SHARE BUTTONS
+========================================================= */
+
+.share-buttons {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+}
+
+
+.share-btn {
+  padding: 11px 16px;
+
+  border: none;
+
+  border-radius: 11px;
+
+  color: white;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+
+.share-btn:hover {
+  transform: translateY(-2px);
+
+  opacity: 0.9;
+}
+
+
+.whatsapp-btn {
+  background: #25d366;
+}
+
+
+.telegram-btn {
+  background: #229ed9;
+}
+
+
+.email-btn {
+  background: #64748b;
+}
+
+
+/* =========================================================
+   STATUS MESSAGES
+========================================================= */
+
+.status-list {
+  margin-top: 18px;
+}
+
+
+.success-msg {
+  margin: 7px 0;
+
+  font-size: 13px;
+
+  opacity: 0.75;
+}
+
+
+/* =========================================================
+   NEW UPLOAD BUTTON
+========================================================= */
+
+.new-upload-btn {
+  width: 100%;
+  max-width: 420px;
+
+  margin-top: 25px;
+
+  padding: 14px 20px;
+
+  border: none;
+
+  border-radius: 13px;
+
+  background: linear-gradient(
+    135deg,
+    #f97316,
+    #44ef97
+  );
+
+  color: white;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 25px rgba(239, 68, 68, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.new-upload-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 30px rgba(239, 68, 68, 0.3);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .result-card {
+    padding: 28px 18px;
+
+    border-radius: 20px;
+  }
+
+
+  .result-card h2 {
+    font-size: 24px;
+  }
+
+
+  .share-code {
+    font-size: 20px;
+
+    padding: 11px 17px;
+
+    letter-spacing: 1.5px;
+  }
+
+
+  .qr-image {
+    width: 180px;
+    height: 180px;
+  }
+
+
+  .share-buttons {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+
+  .share-btn {
+    width: 100%;
+  }
+
+}
+
+/* =========================================================
+   FILE / TEXT MODE SWITCH
+========================================================= */
+
+.upload-mode-switch {
+  display: flex;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 25px;
+  padding: 7px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 8px;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.mode-btn:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mode-btn.active {
+  color: white;
+  background: linear-gradient(
+    135deg,
+    #7c3aed,
+    #2563eb
+  );
+  box-shadow: 0 5px 18px rgba(59, 130, 246, 0.25);
+}
+
+
+/* =========================================================
+   FILE UPLOAD AREA
+========================================================= */
+
+.file-upload-area {
+  text-align: center;
+}
+
+.upload-icon {
+  font-size: 58px;
+  margin-bottom: 10px;
+  filter: drop-shadow(
+    0 8px 15px rgba(59, 130, 246, 0.2)
+  );
+}
+
+
+/* =========================================================
+   TEXT SHARING
+========================================================= */
+
+.text-share-area {
+  text-align: center;
+  width: 100%;
+}
+
+.text-share-icon {
+  font-size: 50px;
+  margin-bottom: 8px;
+}
+
+.text-share-area h2 {
+  margin-bottom: 8px;
+}
+
+.text-share-input {
+  display: block;
+  width: 100%;
+  min-height: 190px;
+  margin: 22px auto 8px;
+  padding: 16px;
+  resize: vertical;
+
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+
+  background: rgba(15, 23, 42, 0.75);
+  color: #f8fafc;
+
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.6;
+
+  outline: none;
+
+  transition: 0.25s ease;
+  box-sizing: border-box;
+}
+
+.text-share-input::placeholder {
+  color: #64748b;
+}
+
+.text-share-input:focus {
+  border-color: #6366f1;
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.12),
+    0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.text-character-count {
+  text-align: right;
+  color: #64748b;
+  font-size: 12px;
+  margin-bottom: 18px;
+}
+
+
+/* =========================================================
+   FIREFLOW CODE
+========================================================= */
+
+.code-section {
+  margin: 24px auto;
+  padding: 18px;
+  max-width: 380px;
+
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  text-align: center;
+}
+
+.code-label {
+  display: block;
+  margin-bottom: 10px;
+
+  color: #f8fafc;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.share-code {
+  display: inline-block;
+
+  padding: 10px 20px;
+
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #7c3aed,
+    #2563eb
+  );
+
+  color: white;
+
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 2px;
+
+  box-shadow:
+    0 8px 25px rgba(59, 130, 246, 0.25);
+
+  user-select: all;
+}
+
+.code-hint {
+  margin-top: 10px;
+  margin-bottom: 0;
+
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   QR SECTION
+========================================================= */
+
+.qr-section {
+  margin: 25px auto;
+  padding: 22px;
+
+  max-width: 380px;
+
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  text-align: center;
+}
+
+.qr-title {
+  margin: 0 0 7px;
+
+  color: #f8fafc;
+  font-size: 18px;
+}
+
+.qr-hint {
+  margin-bottom: 18px;
+
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.qr-image {
+  display: block;
+
+  width: 190px;
+  height: 190px;
+
+  margin: 0 auto;
+
+  padding: 10px;
+
+  background: white;
+  border-radius: 14px;
+
+  object-fit: contain;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.qr-footer {
+  margin-top: 14px;
+  margin-bottom: 0;
+
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   SUCCESS CARD
+========================================================= */
+
+.success-icon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 15px;
+
+  border-radius: 50%;
+
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+
+  color: #22c55e;
+
+  font-size: 30px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   SHARE BUTTONS
+========================================================= */
+
+.share-title {
+  margin-top: 24px;
+  margin-bottom: 12px;
+
+  color: #cbd5e1;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.share-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  border: none;
+  border-radius: 10px;
+
+  padding: 10px 15px;
+
+  color: white;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.share-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+
+/* =========================================================
+   COPY BUTTON
+========================================================= */
+
+.copy-btn {
+  width: 100%;
+  max-width: 380px;
+
+  margin-top: 15px;
+  padding: 13px 18px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.13);
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .upload-box,
+  .result-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .share-code {
+    font-size: 20px;
+    letter-spacing: 1.5px;
+  }
+
+  .qr-image {
+    width: 165px;
+    height: 165px;
+  }
+
+  .text-share-input {
+    min-height: 160px;
+  }
+
+  .share-buttons {
+    flex-direction: column;
+  }
+
+  .share-btn {
+    width: 100%;
+  }
+
+}
