@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>FireFlow Download</title>
+<link 
+rel="stylesheet" 
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+body{
+
+font-family: Arial;
+background:#f4f6f8;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+
+}
+
+
+.card{
+
+background:white;
+padding:30px;
+border-radius:15px;
+width:400px;
+text-align:center;
+box-shadow:0 5px 20px #ccc;
+
+}
+
+
+button{
+
+background:#ff5722;
+color:white;
+border:none;
+padding:12px 25px;
+border-radius:8px;
+cursor:pointer;
+
+}
+
+
+img{
+
+max-width:250px;
+
+}
+iframe{
+
+border:none;
+border-radius:10px;
+margin-top:20px;
+
+}
+.share-btn{
+
+display:inline-flex;
+justify-content:center;
+align-items:center;
+
+width:50px;
+height:50px;
+
+border-radius:50%;
+
+margin:10px;
+
+font-size:25px;
+
+color:white;
+
+text-decoration:none;
+
+}
+
+
+.whatsapp{
+
+background:#25D366;
+
+}
+
+
+.telegram{
+
+background:#229ED9;
+
+}
+
+video{
+
+border-radius:10px;
+margin-top:20px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="card">
+
+
+<h1>🔥 FireFlow</h1>
+
+
+{% if expired %}
+
+<h3>{{message}}</h3>
+
+
+{% else %}
+
+
+{% if protected %}
+
+<h2>🔒 Password Protected File</h2>
+
+
+<h3>
+{{file.original_filename}}
+</h3>
+
+
+<form action="/share/{{file.share_code}}/verify" method="post">
+
+<input 
+type="password"
+name="password"
+placeholder="Enter password"
+required>
+
+
+<button>
+Unlock
+</button>
+
+
+</form>
+
+
+{% else %}
+
+
+<h2>{{file.original_filename}}</h2>
+
+
+{% endif %}
+
+
+<p>
+Size:
+{{file.file_size}} bytes
+</p>
+
+
+<p>
+Downloads:
+{{file.download_count}}
+/
+{{file.max_downloads}}
+</p>
+
+
+<p>
+Expires:
+{{file.expires_at}}
+</p>
+
+<h3>Scan QR to Share</h3>
+
+<img 
+src="/qr/{{file.share_code}}.png"
+width="180">
+
+<h3>Share</h3>
+
+
+<a 
+class="share-btn whatsapp"
+target="_blank"
+href="https://wa.me/?text=http://127.0.0.1:8000/share/{{file.share_code}}">
+
+<i class="fa-brands fa-whatsapp"></i>
+
+</a>
+
+
+
+<a 
+class="share-btn telegram"
+target="_blank"
+href="https://t.me/share/url?url=http://127.0.0.1:8000/share/{{file.share_code}}">
+
+<i class="fa-brands fa-telegram"></i>
+
+</a>
+
+<!-- IMAGE PREVIEW -->
+
+{% if not protected and file.mime_type.startswith("image") %}
+
+<h3>Preview</h3>
+
+<img src="/share/download/{{file.share_code}}">
+
+{% endif %}
+
+<!-- PDF PREVIEW -->
+
+{% if not protected and file.mime_type == "application/pdf" %}
+
+<h3>📄 PDF Document</h3>
+
+<p>
+PDF preview is not available here.
+</p>
+
+<a href="/share/download/{{file.share_code}}" target="_blank">
+
+<button>
+Open PDF
+</button>
+
+</a>
+
+{% endif %}
+
+
+<!-- VIDEO PREVIEW -->
+
+{% if not protected and file.mime_type.startswith("video") %}
+
+<h3>Preview</h3>
+
+<video width="100%" controls>
+
+<source src="/share/download/{{file.share_code}}">
+
+</video>
+
+{% endif %}
+
+
+<br><br>
+
+
+{% if protected %}
+
+<p>
+🔒 Enter password above to download this file.
+</p>
+
+{% else %}
+
+<a href="/share/download/{{file.share_code}}">
+
+<button>
+Download File
+</button>
+
+</a>
+
+{% endif %}
+
+
+
+{% endif %}
+
+
+</div>
+
+
+</body>
+
+</html>
