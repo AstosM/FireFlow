@@ -64,6 +64,9 @@ return ( <div className="home-container">
   </div>
 <footer className="home-footer">
   © 2026 FireFlow. All rights reserved.
+  <p>
+            Built by Ashutosh with ❤️ using React and FastAPI.
+          </p>
 </footer>
 </div>
 );

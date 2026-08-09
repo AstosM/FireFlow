@@ -110,7 +110,7 @@ function About() {
         <div className="about-footer">
 
           <p>
-            Built with ❤️ using React and FastAPI.
+            Built by Ashutosh with ❤️ using React and FastAPI.
           </p>
 
           <span>
